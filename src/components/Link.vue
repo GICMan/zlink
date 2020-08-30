@@ -1,10 +1,15 @@
 <template>
   <div class="link-container drop-shadow">
     <a v-bind:href="link">
-      <i class="fas fa-video"></i>
-      <span class="link-name">{{ linkName }}</span>
-      <i class="fas fa-link"></i>
-      <span class="link-text">{{ linkId }}</span>
+      <span class="link-name">
+        <i class="fas fa-video"></i>
+        {{ linkName }}
+      </span>
+
+      <span class="link-text">
+        <i class="fas fa-link"></i>
+        {{ linkId }}
+      </span>
     </a>
     <button @click="$emit('editlink')" class="edit-link">
       <i class="fas fa-pen"></i>
@@ -30,8 +35,16 @@ export default {
   border-radius: 20px;
   padding-left: 15px;
   padding-right: 15px;
+
+  margin-top: 8px;
+  margin-bottom: 8px;
+
   display: flex;
   align-items: center;
+}
+
+.link-container:hover {
+  background-color: #296aca;
 }
 
 a {
@@ -67,5 +80,9 @@ a {
 
 .edit-link:focus {
   outline: 0;
+}
+
+.link-text {
+  float: right;
 }
 </style>

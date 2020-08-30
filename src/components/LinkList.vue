@@ -2,9 +2,9 @@
   <div class="list-container">
     <Link
       v-for="link in links"
-      v-bind:key="link.id"
+      v-bind:key="link.uid"
       v-bind:linkName="link.name"
-      v-bind:linkId="link.id"
+      v-bind:linkId="link.meetingId"
     />
     <button @click="$emit('add-link')" class="add-link-button">Add link</button>
   </div>
