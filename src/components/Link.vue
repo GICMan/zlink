@@ -3,14 +3,15 @@
     <a v-bind:href="link">
       <span class="link-name">
         <i class="fas fa-video"></i>
-        {{ linkName }}
+        {{ alias }}
       </span>
 
       <span class="link-text">
         <i class="fas fa-link"></i>
-        {{ linkId }}
+        {{ id }}
       </span>
     </a>
+
     <button @click="$emit('editlink')" class="edit-link">
       <i class="fas fa-pen"></i>
     </button>
@@ -19,10 +20,23 @@
 
 <script>
 export default {
-  props: ["linkName", "linkId"],
+  props: ["alias", "id", "password", "selectedDevice"],
   computed: {
     link: function() {
-      return `zoommtg://zoom.us/join?confno=${this.linkId}`;
+      if (this.selectedDevice === 2) {
+        if (!this.password) {
+          return `https://zoom.us/j/${this.id}`;
+        } else {
+          return `https://zoom.us/j/${this.id}?pwd=${this.password}`;
+        }
+      }
+
+      const suffix = this.selectedDevice === 0 ? "mtg" : "us";
+      if (!this.password) {
+        return `zoom${suffix}://zoom.us/join?confno=${this.id}`;
+      } else {
+        return `zoom${suffix}://zoom.us/join?confno=${this.id}&pwd=${this.password}`;
+      }
     }
   }
 };
@@ -30,7 +44,7 @@ export default {
 
 <style>
 .link-container {
-  height: 40px;
+  min-height: 40px;
   background-color: #418bf9;
   border-radius: 20px;
   padding-left: 15px;
@@ -79,6 +93,7 @@ a {
 }
 
 .edit-link:focus {
+  color: #90bcff;
   outline: 0;
 }
 

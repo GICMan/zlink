@@ -12,7 +12,6 @@
     <button class="cancel drop-shadow" @click.prevent="$emit('cancel-add')">Cancel</button>
   </form>
 </template>
-
 <script>
 import { string } from "yup";
 

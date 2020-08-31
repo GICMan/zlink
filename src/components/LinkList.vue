@@ -3,8 +3,10 @@
     <Link
       v-for="link in links"
       v-bind:key="link.uid"
-      v-bind:linkName="link.name"
-      v-bind:linkId="link.meetingId"
+      v-bind:alias="link.alias"
+      v-bind:id="link.id"
+      v-bind:password="link.password"
+      v-bind:selectedDevice="selectedDevice"
     />
     <button @click="$emit('add-link')" class="add-link-button">Add link</button>
   </div>
@@ -17,7 +19,7 @@ export default {
   components: {
     Link
   },
-  props: ["links"]
+  props: ["links", "selectedDevice"]
 };
 </script>
 
@@ -36,9 +38,9 @@ export default {
   margin: 10px 0 10px 0;
   width: 100%;
 
-  border-style: dashed;
+  border-style: solid;
   border-color: #418bf9;
-  border-width: 4px;
+  border-width: 2px;
   border-radius: 40px;
 
   color: #418bf9;
@@ -48,8 +50,10 @@ export default {
   cursor: pointer;
 }
 
-.add-link-button:focus {
-  outline: 0;
+.add-link-button:hover {
+  border-style: solid;
+  background-color: #418bf9;
+  color: white;
 }
 
 .new-link {
