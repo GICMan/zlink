@@ -3,7 +3,9 @@
     <Profile v-bind:profileImage="userData.photoURL" v-if="userData" />
     <div class="main-container drop-shadow">
       <div class="heading">
-        <h1 class="container-title">My Zoom Links</h1>
+        <h1 class="container-title" v-bind:class="{ centered: !userData }">
+          My Zoom Links
+        </h1>
 
         <div v-if="userData && view.name === 'LIST'" class="device-selector">
           <button
@@ -164,6 +166,10 @@ export default {
   color: #418bf9;
   display: inline;
   text-overflow: ellipsis;
+}
+.centered {
+  text-align: center;
+  display: block;
 }
 
 .device-selector {
