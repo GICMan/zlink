@@ -2,11 +2,14 @@
   <div class="list-container">
     <Link
       v-for="link in links"
-      v-bind:key="link.uid"
-      v-bind:alias="link.alias"
-      v-bind:id="link.id"
-      v-bind:password="link.password"
-      v-bind:selectedDevice="selectedDevice"
+      :key="link.uid"
+      :uid="link.uid"
+      :initialData="link.initialData"
+      :alias="link.alias"
+      :id="link.id"
+      :password="link.password"
+      :selectedDevice="selectedDevice"
+      v-on="$listeners"
     />
     <button @click="$emit('add-link')" class="add-link-button">Add link</button>
   </div>

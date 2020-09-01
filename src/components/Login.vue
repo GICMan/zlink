@@ -4,26 +4,22 @@
       Welcome to ZLink! All your zoom links in one place. Create, edit, and
       remove different links as you need to. Sign in to get started!
     </p>
-    <button class="login-button drop-shadow" @click="login">Sign in with Google</button>
+    <button class="login-button drop-shadow" @click="login">
+      Sign in with Google
+    </button>
   </div>
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/auth";
+import * as firebase from "../firebase.js";
 
 export default {
   name: "Login",
   methods: {
     login: function() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .catch(error => {
-          console.error(error);
-        });
+      firebase.auth.signInWithPopup(firebase.provider).catch(error => {
+        console.error(error);
+      });
     }
   }
 };

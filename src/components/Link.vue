@@ -12,7 +12,10 @@
       </span>
     </a>
 
-    <button @click="$emit('editlink')" class="edit-link">
+    <button
+      @click="$emit('edit-link', { alias, initialData, uid })"
+      class="edit-link"
+    >
       <i class="fas fa-pen"></i>
     </button>
   </div>
@@ -20,7 +23,7 @@
 
 <script>
 export default {
-  props: ["alias", "id", "password", "selectedDevice"],
+  props: ["alias", "id", "password", "selectedDevice", "uid", "initialData"],
   computed: {
     link: function() {
       if (this.selectedDevice === 2) {

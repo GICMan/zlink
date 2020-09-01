@@ -8,12 +8,20 @@
     <label for="link">Meeting Link or ID</label>
     <input v-model="link" type="text" name="link" />
 
-    <input class="add drop-shadow" @click.prevent="addLink" value="Add" type="submit" />
-    <button class="cancel drop-shadow" @click.prevent="$emit('cancel-add')">Cancel</button>
+    <input
+      class="add drop-shadow"
+      @click.prevent="editLink"
+      value="Edit"
+      type="submit"
+    />
+    <button class="cancel drop-shadow" @click.prevent="$emit('cancel')">
+      Cancel
+    </button>
   </form>
 </template>
+
 <script>
-import { string } from "yup";
+import validate from "../linkValidation.js";
 
 export default {
   data: function() {
@@ -23,64 +31,25 @@ export default {
       error: null
     };
   },
+  props: ["originalAlias", "originalData"],
+  mounted: function() {
+    this.alias = this.originalAlias;
+    this.link = this.originalData;
+  },
   methods: {
-    addLink: function() {
+    editLink: function() {
       this.error = null;
 
-      const aliasSchema = string().required("Please enter a meeting alias");
-      const linkSchema = string()
-        .required("Please enter a link or id")
-        .url("Please enter a valid url or meeting id")
-        .matches(/.zoom.us\/j\//g, "Please enter a valid zoom link or id");
-      const idSchema = string()
-        .required("Please enter a meeting link or id")
-        .min(9, "ID must be between 9 and 11 digits")
-        .max(11, "ID must be between 9 and 11 digits");
-
-      aliasSchema
-        .validate(this.alias)
-        .then(() => {
-          if (isNaN(this.link)) {
-            linkSchema
-              .validate(this.link)
-              .then(() => {
-                const splitLink = this.link.split(/\?pwd=|j\//);
-                const id = splitLink[1];
-                const password = splitLink[2];
-                idSchema
-                  .validate(id)
-                  .then(() => {
-                    this.$emit("add-link", {
-                      alias: this.alias,
-                      password,
-                      id
-                    });
-                  })
-                  .catch(() => {
-                    this.error = "Link is not a valid zoom link";
-                  });
-              })
-              .catch(error => {
-                this.error = error.message;
-              });
-          } else {
-            idSchema
-              .validate(this.link)
-              .then(() => {
-                this.$emit("add-link", {
-                  alias: this.alias,
-                  id: this.link,
-                  link: ""
-                });
-              })
-              .catch(error => {
-                this.error = error.message;
-              });
-          }
+      validate(this.alias, this.link)
+        .then(results => {
+          this.$emit("edit-link", {
+            alias: this.alias,
+            password: results.password,
+            id: results.id,
+            initialData: this.link
+          });
         })
-        .catch(error => {
-          this.error = error.message;
-        });
+        .catch(error => (this.error = error));
     }
   }
 };
