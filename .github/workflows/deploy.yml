@@ -38,6 +38,6 @@ jobs:
            
        # Creates a refrence to the firebase project to deploy to
         env:  
-            FIREBASE_TOKEN: ${{ secrets.FirebaseDeploy }}  
+            FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}  
       
       
