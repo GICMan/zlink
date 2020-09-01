@@ -47,7 +47,7 @@ export default {
 
 <style>
 .link-container {
-  min-height: 40px;
+  height: 40px;
   background-color: #418bf9;
   border-radius: 20px;
   padding-left: 15px;
@@ -56,8 +56,8 @@ export default {
   margin-top: 8px;
   margin-bottom: 8px;
 
+  line-height: 40px;
   display: flex;
-  align-items: center;
 }
 
 .link-container:hover {
@@ -67,10 +67,10 @@ export default {
 a {
   color: white;
   text-decoration: none;
-  width: 70%;
-  display: inline-block;
-  flex-grow: 1;
   line-height: 40px;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fas {
@@ -86,9 +86,10 @@ a {
   background-color: transparent;
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
+  float: right;
 }
 
 .edit-link:hover {
@@ -102,5 +103,10 @@ a {
 
 .link-text {
   float: right;
+}
+
+span {
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

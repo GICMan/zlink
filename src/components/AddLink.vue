@@ -88,6 +88,12 @@ form {
   padding: 0px 60px 0px 60px;
 }
 
+@media only screen and (max-width: 500px) {
+  form {
+    padding: 0px 5px 0px 5px;
+  }
+}
+
 button,
 .add {
   height: 40px;

@@ -2,30 +2,34 @@
   <div id="app">
     <Profile v-bind:profileImage="userData.photoURL" v-if="userData" />
     <div class="main-container drop-shadow">
-      <h1 class="container-title">My Zoom Links</h1>
-      <div v-if="userData && view.name === 'LIST'" class="device-selector">
-        <button
-          class="icon-wrapper"
-          :class="selectedDevice === 0 ? 'selected' : ''"
-          @click="selectDevice(0)"
-        >
-          <i class="fas fa-desktop"></i>
-        </button>
-        <button
-          class="icon-wrapper"
-          :class="selectedDevice === 1 ? 'selected' : ''"
-          @click="selectDevice(1)"
-        >
-          <i class="fas fa-mobile-alt"></i>
-        </button>
-        <button
-          class="icon-wrapper"
-          :class="selectedDevice === 2 ? 'selected' : ''"
-          @click="selectDevice(2)"
-        >
-          <i class="fas fa-globe"></i>
-        </button>
+      <div class="heading">
+        <h1 class="container-title">My Zoom Links</h1>
+
+        <div v-if="userData && view.name === 'LIST'" class="device-selector">
+          <button
+            class="icon-wrapper"
+            :class="selectedDevice === 0 ? 'selected' : ''"
+            @click="selectDevice(0)"
+          >
+            <i class="fas fa-desktop"></i>
+          </button>
+          <button
+            class="icon-wrapper"
+            :class="selectedDevice === 1 ? 'selected' : ''"
+            @click="selectDevice(1)"
+          >
+            <i class="fas fa-mobile-alt"></i>
+          </button>
+          <button
+            class="icon-wrapper"
+            :class="selectedDevice === 2 ? 'selected' : ''"
+            @click="selectDevice(2)"
+          >
+            <i class="fas fa-globe"></i>
+          </button>
+        </div>
       </div>
+      <Loader v-if="loadingLinks && userData" />
       <LinkList
         v-if="userData && view.name === 'LIST'"
         v-bind:links="links"
@@ -56,6 +60,7 @@ import LinkList from "./components/LinkList.vue";
 import Login from "./components/Login.vue";
 import AddLink from "./components/AddLink.vue";
 import EditLink from "./components/EditLink.vue";
+import Loader from "./components/Loader.vue";
 import "./assets/main.css";
 
 import * as firebase from "./firebase.js";
@@ -67,7 +72,8 @@ export default {
     LinkList,
     Login,
     AddLink,
-    EditLink
+    EditLink,
+    Loader
   },
   data() {
     return {
@@ -77,7 +83,8 @@ export default {
         name: "LIST",
         data: {}
       },
-      selectedDevice: 0
+      selectedDevice: 0,
+      loadingLinks: true
     };
   },
   mounted: function() {
@@ -87,6 +94,7 @@ export default {
 
         firebase.loadUserLinks(this.userData, snapshot => {
           this.linkDocs = snapshot.docs;
+          this.loadingLinks = false;
         });
       } else {
         this.userData = null;
@@ -153,8 +161,9 @@ export default {
 }
 
 .container-title {
-  text-align: center;
   color: #418bf9;
+  display: inline;
+  text-overflow: ellipsis;
 }
 
 .device-selector {
@@ -167,9 +176,15 @@ export default {
   border-width: 2px;
   border-radius: 30px;
 
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  float: right;
+}
+
+@media only screen and (max-width: 558px) {
+  .device-selector {
+    float: none;
+    display: inline-block;
+    margin-top: 15px;
+  }
 }
 
 .icon-wrapper {
@@ -203,5 +218,12 @@ export default {
 .icon-wrapper:focus {
   outline: 0;
   background-color: #76aaf8;
+}
+
+.heading {
+  margin: 0 auto;
+  width: 85%;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 </style>
