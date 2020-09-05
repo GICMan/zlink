@@ -121,20 +121,25 @@ export default {
     startEditting: function(payload) {
       this.view.name = "EDIT";
       this.view.data = payload;
+    },
+    updateLinks: function(payload) {
+      this.links = payload;
     }
   },
 
   computed: {
-    links: function() {
-      return this.linkDocs.map(link => {
-        return {
-          id: link.data().id,
-          alias: link.data().alias,
-          uid: link.id,
-          password: link.data().password,
-          initialData: link.data().initialData
-        };
-      });
+    links: {
+      get: function() {
+        return this.linkDocs.map(link => {
+          return {
+            id: link.data().id,
+            alias: link.data().alias,
+            uid: link.id,
+            password: link.data().password,
+            initialData: link.data().initialData
+          };
+        });
+      }
     }
   }
 };

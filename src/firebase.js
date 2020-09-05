@@ -31,7 +31,7 @@ const loadUserLinks = (userData, updateLinks) => {
       if (!userDoc.exists) {
         // for a document to have a collection, it must have at
         // least 1 property, so a name field is set
-        userRef.set({ name: userData.displayName });
+        userRef.set({ name: userData.displayName, linkOrder: [] });
       }
 
       userRef.collection("links").onSnapshot(updateLinks);
@@ -43,7 +43,12 @@ const addLink = ({ id, password, alias, initialData }, callback) => {
   userRef
     .collection("links")
     .doc()
-    .set({ id, password: password ? password : "", alias, initialData })
+    .set({
+      id,
+      password: password ? password : "",
+      alias,
+      initialData
+    })
     .then(callback)
     .catch(error => console.error("Could not get document: " + error));
 };
@@ -52,9 +57,13 @@ const updateLink = ({ uid, id, password, alias, initialData }, callback) => {
   userRef
     .collection("links")
     .doc(uid)
-    .set({ id, password: password ? password : "", alias, initialData })
+    .update({ id, password: password ? password : "", alias, initialData })
     .then(callback)
     .catch(error => console.error("Could not get document: " + error));
 };
 
-export { auth, db, provider, loadUserLinks, addLink, updateLink };
+const updateOrder = links => {
+  userRef.update({ linkOrder: links.map(link => link.uid) }).catch(console.log);
+};
+
+export { auth, db, provider, loadUserLinks, addLink, updateLink, updateOrder };

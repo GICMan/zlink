@@ -1,28 +1,59 @@
 <template>
   <div class="list-container">
-    <Link
-      v-for="link in links"
-      :key="link.uid"
-      :uid="link.uid"
-      :initialData="link.initialData"
-      :alias="link.alias"
-      :id="link.id"
-      :password="link.password"
-      :selectedDevice="selectedDevice"
-      v-on="$listeners"
-    />
+    <draggable v-bind="dragOptions" v-model="orderedLinks" @move="moveLinks">
+      <transition-group type="transition">
+        <Link
+          v-for="link in orderedLinks"
+          :key="link.uid"
+          :uid="link.uid"
+          :initialData="link.initialData"
+          :alias="link.alias"
+          :id="link.id"
+          :password="link.password"
+          :selectedDevice="selectedDevice"
+          v-on="$listeners"
+        />
+      </transition-group>
+    </draggable>
     <button @click="$emit('add-link')" class="add-link-button">Add link</button>
   </div>
 </template>
 
 <script>
 import Link from "./Link.vue";
+import draggable from "vuedraggable";
+import { updateOrder } from "../firebase.js";
 
 export default {
   components: {
-    Link
+    Link,
+    draggable
   },
-  props: ["links", "selectedDevice"]
+
+  props: ["links", "selectedDevice"],
+  computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        disabled: false,
+        ghostClass: "ghost",
+        dragClass: "dragging"
+      };
+    },
+    orderedLinks: {
+      get: function() {
+        return this.links;
+      },
+      set: function(val) {
+        return val;
+      }
+    }
+  },
+  methods: {
+    moveLinks: function() {
+      updateOrder(this.links);
+    }
+  }
 };
 </script>
 
@@ -71,5 +102,9 @@ export default {
   color: white;
 
   line-height: 40px;
+}
+
+.ghost {
+  opacity: 0.2;
 }
 </style>
