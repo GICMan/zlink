@@ -24,7 +24,6 @@ const provider = new firebase.auth.GoogleAuthProvider();
 // and sets up a live connection to the users links
 const loadUserLinks = (userData, updateLinks) => {
   userRef = db.collection("users").doc(userData.uid);
-
   userRef
     .get()
     .then(userDoc => {
@@ -34,7 +33,11 @@ const loadUserLinks = (userData, updateLinks) => {
         userRef.set({ name: userData.displayName, linkOrder: [] });
       }
 
-      userRef.collection("links").onSnapshot(updateLinks);
+      userRef
+        .collection("links")
+        .onSnapshot(snapshot =>
+          updateLinks(snapshot, userDoc.data().linkOrder)
+        );
     })
     .catch(error => console.error("Could not get document: " + error));
 };
@@ -42,14 +45,19 @@ const loadUserLinks = (userData, updateLinks) => {
 const addLink = ({ id, password, alias, initialData }, callback) => {
   userRef
     .collection("links")
-    .doc()
-    .set({
+    .add({
       id,
       password: password ? password : "",
       alias,
       initialData
     })
-    .then(callback)
+    .then(docRef => {
+      userRef.get().then(userDoc => {
+        var newLinkOrder = userDoc.data().linkOrder;
+        newLinkOrder.push(docRef.id);
+        userRef.set({ linkOrder: newLinkOrder }).then(callback);
+      });
+    })
     .catch(error => console.error("Could not get document: " + error));
 };
 
@@ -63,7 +71,7 @@ const updateLink = ({ uid, id, password, alias, initialData }, callback) => {
 };
 
 const updateOrder = links => {
-  userRef.update({ linkOrder: links.map(link => link.uid) }).catch(console.log);
+  userRef.set({ linkOrder: links.map(link => link.uid) }).catch(console.log);
 };
 
 export { auth, db, provider, loadUserLinks, addLink, updateLink, updateOrder };

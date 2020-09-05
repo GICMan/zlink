@@ -3,17 +3,23 @@
     <a v-bind:href="link">
       <span class="link-name">
         <i class="fas fa-video"></i>
-        {{ alias }}
+        {{ linkData.alias }}
       </span>
 
       <span class="link-text">
         <i class="fas fa-link"></i>
-        {{ id }}
+        {{ linkData.id }}
       </span>
     </a>
 
     <button
-      @click="$emit('edit-link', { alias, initialData, uid })"
+      @click="
+        $emit('edit-link', {
+          alias: linkData.alias,
+          initialData: linkData.initialData,
+          uid: linkData.uid
+        })
+      "
       class="edit-link"
     >
       <i class="fas fa-pen"></i>
@@ -23,22 +29,22 @@
 
 <script>
 export default {
-  props: ["alias", "id", "password", "selectedDevice", "uid", "initialData"],
+  props: ["linkData", "selectedDevice"],
   computed: {
     link: function() {
       if (this.selectedDevice === 2) {
-        if (!this.password) {
-          return `https://zoom.us/j/${this.id}`;
+        if (!this.linkData.password) {
+          return `https://zoom.us/j/${this.linkData.id}`;
         } else {
-          return `https://zoom.us/j/${this.id}?pwd=${this.password}`;
+          return `https://zoom.us/j/${this.linkData.id}?pwd=${this.linkData.password}`;
         }
       }
 
       const suffix = this.selectedDevice === 0 ? "mtg" : "us";
-      if (!this.password) {
-        return `zoom${suffix}://zoom.us/join?confno=${this.id}`;
+      if (!this.linkData.password) {
+        return `zoom${suffix}://zoom.us/join?confno=${this.linkData.id}`;
       } else {
-        return `zoom${suffix}://zoom.us/join?confno=${this.id}&pwd=${this.password}`;
+        return `zoom${suffix}://zoom.us/join?confno=${this.linkData.id}&pwd=${this.linkData.password}`;
       }
     }
   }

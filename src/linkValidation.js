@@ -27,6 +27,8 @@ export default async (alias, link) => {
       return { id, password };
     } else {
       await idSchema.validate(link);
+
+      return { id: link };
     }
   } catch (error) {
     throw new Error(error.message);

@@ -31,15 +31,13 @@
           </button>
         </div>
       </div>
-      <Loader v-if="loadingLinks && userData" />
       <LinkList
-        v-if="userData && view.name === 'LIST'"
-        v-bind:links="links"
+        v-if="loggedIn && view.name === 'LIST'"
+        :userData="userData"
+        :selectedDevice="selectedDevice"
         @add-link="view.name = 'ADD'"
         @edit-link="startEditting"
-        v-bind:selectedDevice="selectedDevice"
       />
-      <Login v-if="!userData" />
       <AddLink
         v-if="view.name === 'ADD'"
         @add-link="addLink"
@@ -47,22 +45,22 @@
       />
       <EditLink
         v-if="view.name === 'EDIT'"
-        @edit-link="editLink"
-        @cancel="view.name = 'LIST'"
         :originalAlias="view.data.alias"
         :originalData="view.data.initialData"
+        @edit-link="editLink"
+        @cancel="view.name = 'LIST'"
       />
+      <Login v-if="!userData" />
     </div>
   </div>
 </template>
 
 <script>
 import Profile from "./components/Profile.vue";
-import LinkList from "./components/LinkList.vue";
 import Login from "./components/Login.vue";
+import LinkList from "./components/LinkList.vue";
 import AddLink from "./components/AddLink.vue";
 import EditLink from "./components/EditLink.vue";
-import Loader from "./components/Loader.vue";
 import "./assets/main.css";
 
 import * as firebase from "./firebase.js";
@@ -74,32 +72,27 @@ export default {
     LinkList,
     Login,
     AddLink,
-    EditLink,
-    Loader
+    EditLink
   },
   data() {
     return {
       userData: {},
-      linkDocs: [],
+      loggedIn: false,
       view: {
         name: "LIST",
         data: {}
       },
-      selectedDevice: 0,
-      loadingLinks: true
+      selectedDevice: 0
     };
   },
   mounted: function() {
     firebase.auth.onAuthStateChanged(user => {
       if (user) {
         this.userData = user;
-
-        firebase.loadUserLinks(this.userData, snapshot => {
-          this.linkDocs = snapshot.docs;
-          this.loadingLinks = false;
-        });
+        this.loggedIn = true;
       } else {
         this.userData = null;
+        this.loggedIn = false;
       }
     });
   },
@@ -124,22 +117,6 @@ export default {
     },
     updateLinks: function(payload) {
       this.links = payload;
-    }
-  },
-
-  computed: {
-    links: {
-      get: function() {
-        return this.linkDocs.map(link => {
-          return {
-            id: link.data().id,
-            alias: link.data().alias,
-            uid: link.id,
-            password: link.data().password,
-            initialData: link.data().initialData
-          };
-        });
-      }
     }
   }
 };

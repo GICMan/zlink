@@ -1,16 +1,13 @@
 <template>
   <div class="list-container">
-    <draggable v-bind="dragOptions" v-model="orderedLinks" @move="moveLinks">
+    <Loader v-if="loadingLinks" />
+    <draggable v-bind="dragOptions" v-model="links" @update="moveLinks">
       <transition-group type="transition">
         <Link
-          v-for="link in orderedLinks"
+          v-for="link in links"
           :key="link.uid"
-          :uid="link.uid"
-          :initialData="link.initialData"
-          :alias="link.alias"
-          :id="link.id"
-          :password="link.password"
           :selectedDevice="selectedDevice"
+          :linkData="link"
           v-on="$listeners"
         />
       </transition-group>
@@ -22,31 +19,46 @@
 <script>
 import Link from "./Link.vue";
 import draggable from "vuedraggable";
-import { updateOrder } from "../firebase.js";
+import Loader from "./Loader";
+import { loadUserLinks, updateOrder } from "../firebase.js";
 
 export default {
   components: {
     Link,
+    Loader,
     draggable
   },
 
-  props: ["links", "selectedDevice"],
+  props: ["selectedDevice", "userData"],
+  data: function() {
+    return {
+      links: [],
+      loadingLinks: true
+    };
+  },
+  mounted: function() {
+    loadUserLinks(this.userData, (snapshot, linkOrder) => {
+      var orderedLinks = [];
+      snapshot.docs.forEach(link => {
+        orderedLinks[linkOrder.indexOf(link.id)] = {
+          id: link.data().id,
+          alias: link.data().alias,
+          uid: link.id,
+          password: link.data().password,
+          initialData: link.data().initialData
+        };
+      });
+      this.links = orderedLinks;
+      this.loadingLinks = false;
+    });
+  },
   computed: {
     dragOptions() {
       return {
         animation: 200,
         disabled: false,
-        ghostClass: "ghost",
-        dragClass: "dragging"
+        ghostClass: "ghost"
       };
-    },
-    orderedLinks: {
-      get: function() {
-        return this.links;
-      },
-      set: function(val) {
-        return val;
-      }
     }
   },
   methods: {
