@@ -46,7 +46,7 @@ export default {
   padding: 2px 5px 2px 5px;
   border-style: solid;
   border-color: #418bf9;
-  border-width: 2px;
+  border-width: 3px;
   border-radius: 30px;
 }
 
@@ -66,11 +66,11 @@ export default {
 }
 
 .icon-wrapper:hover {
-  background-color: #76aaf8;
+  background-color: #f2f2f2;
 }
 
 .icon-wrapper.selected {
-  background-color: #89b7fc;
+  background-color: #418bf9;
   color: white;
 }
 </style>
