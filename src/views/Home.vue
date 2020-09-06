@@ -43,7 +43,8 @@
       </router-link>
     </section>
     <footer class="footer">
-      Created By Gabriel Casselman <a href="/contact">Contact Me</a>
+      Created By Gabriel Casselman
+      <a href="/contact" class="contact">Contact Me</a>
     </footer>
   </div>
 </template>
@@ -84,6 +85,7 @@ export default {
   padding: 70px;
   padding-right: 10%;
   color: #a82981;
+  z-index: 10;
 }
 
 .hero-image {
@@ -164,5 +166,9 @@ export default {
   height: 40px;
   margin-top: -40px;
   line-height: 40px;
+}
+
+.contact {
+  margin-left: 30px;
 }
 </style>
