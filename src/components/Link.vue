@@ -59,8 +59,8 @@ export default {
   padding-left: 15px;
   padding-right: 15px;
 
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 13px;
+  margin-bottom: 13px;
 
   line-height: 40px;
   display: flex;

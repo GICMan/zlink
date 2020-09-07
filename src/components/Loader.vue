@@ -9,7 +9,7 @@
   border-radius: 50%;
   width: 25px;
   height: 25px;
-  margin: 0 auto;
+  margin: 10px auto;
   animation: spin 2s linear infinite;
 }
 

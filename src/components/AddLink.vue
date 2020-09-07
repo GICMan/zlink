@@ -1,48 +1,65 @@
 <template>
   <form>
+    <h1 class="add-text">Add Zoom Link</h1>
     <div class="error" v-if="this.error">{{ error }}</div>
 
     <label for="alias">Meeting Alias</label>
-    <input v-model="alias" type="text" name="alias" />
+    <input class="text-field" v-model="alias" type="text" name="alias" />
 
     <label for="link">Meeting Link or ID</label>
-    <input v-model="link" type="text" name="link" />
-
-    <input
-      class="add drop-shadow"
-      @click.prevent="addLink"
-      value="Add"
-      type="submit"
-    />
-    <button class="cancel drop-shadow" @click.prevent="$emit('cancel')">
-      Cancel
-    </button>
+    <input class="text-field" v-model="link" type="text" name="link" />
+    <Loader v-if="addingLink" />
+    <div v-else>
+      <input
+        class="add drop-shadow primary-button"
+        @click.prevent="submit"
+        value="Add"
+        type="submit"
+      />
+      <button
+        class="cancel drop-shadow secondary-button"
+        @click.prevent="$emit('cancel')"
+      >
+        Cancel
+      </button>
+    </div>
   </form>
 </template>
 
 <script>
 import validate from "../linkValidation.js";
+import Loader from "./Loader.vue";
+import { addLink } from "../firebase";
 
 export default {
   data: function() {
     return {
       alias: "",
       link: "",
-      error: null
+      error: null,
+      addingLink: false
     };
   },
+  components: { Loader },
   methods: {
-    addLink: function() {
+    submit: function() {
       this.error = null;
 
       validate(this.alias, this.link)
         .then(results => {
-          this.$emit("add-link", {
-            alias: this.alias,
-            password: results.password,
-            id: results.id,
-            initialData: this.link
-          });
+          this.addingLink = true;
+          addLink(
+            {
+              alias: this.alias,
+              password: results.password,
+              id: results.id,
+              initialData: this.link
+            },
+            link => {
+              this.addingLink = false;
+              this.$emit("add-success", link);
+            }
+          );
         })
         .catch(error => (this.error = error));
     }
@@ -51,82 +68,27 @@ export default {
 </script>
 
 <style scoped>
-input[type="text"] {
-  display: block;
-  margin-bottom: 20px;
-  width: 100%;
-  height: 40px;
-  font-size: 18px;
-  font-family: "Roboto Slab", serif;
-  padding-left: 15px;
-  padding-right: 15px;
-
-  border: none;
-  border-bottom: #418bf9 4px solid;
-  border-radius: 8px 8px 0 0;
-  box-sizing: border-box;
-
-  background-color: #ececec;
-
-  color: #418bf9;
-}
-
-input:focus {
-  outline: 0;
-  border-style: solid;
-  border-color: #839ec7;
-  border-width: 2px;
-  border-bottom: #418bf9 4px solid;
+form {
+  margin: 50px auto;
 }
 
 label {
+  margin-bottom: 10px;
   display: block;
-  margin-bottom: 4px;
-  color: #9093f3;
-}
-form {
-  padding: 0px 60px 0px 60px;
-}
-
-@media only screen and (max-width: 500px) {
-  form {
-    padding: 0px 5px 0px 5px;
-  }
-}
-
-button,
-.add {
-  height: 40px;
-  width: 80px;
-  border-radius: 20px;
-  font-family: "Roboto Slab", serif;
-  font-size: 16px;
-  cursor: pointer;
+  color: #6d72f2;
 }
 
 .add {
   float: right;
-  border: none;
-  background-color: #418bf9;
-  color: white;
 }
 
+.add,
 .cancel {
-  border: #418bf9 3px solid;
-  background-color: white;
-  color: #418bf9;
+  width: 100px;
 }
 
-.error {
-  width: 100%;
-  background-color: #ececec;
-  color: #418bf9;
-  height: 40px;
-  border-radius: 20px;
-  line-height: 40px;
-  padding-left: 15px;
-  padding-right: 15px;
-  box-sizing: border-box;
-  margin-bottom: 15px;
+.add-text {
+  color: #a82981;
+  text-align: center;
 }
 </style>

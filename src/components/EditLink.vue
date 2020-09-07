@@ -1,137 +1,118 @@
 <template>
   <form>
+    <h1 class="edit-text">Edit Zoom Link</h1>
     <div class="error" v-if="this.error">{{ error }}</div>
 
     <label for="alias">Meeting Alias</label>
-    <input v-model="alias" type="text" name="alias" />
+    <input class="text-field" v-model="alias" type="text" name="alias" />
 
     <label for="link">Meeting Link or ID</label>
-    <input v-model="link" type="text" name="link" />
+    <input class="text-field" v-model="link" type="text" name="link" />
+    <Loader v-if="edittingLink" />
+    <div v-else>
+      <input
+        class="edit drop-shadow primary-button"
+        @click.prevent="submit"
+        value="Edit"
+        type="submit"
+      />
 
-    <input
-      class="add drop-shadow"
-      @click.prevent="editLink"
-      value="Edit"
-      type="submit"
-    />
-    <button class="cancel drop-shadow" @click.prevent="$emit('cancel')">
-      Cancel
-    </button>
+      <button
+        class="cancel drop-shadow secondary-button"
+        @click.prevent="$emit('cancel')"
+      >
+        Cancel
+      </button>
+      <button
+        class="delete drop-shadow secondary-button"
+        @click.prevent="removeLink"
+      >
+        Delete
+      </button>
+    </div>
   </form>
 </template>
 
 <script>
 import validate from "../linkValidation.js";
+import Loader from "./Loader.vue";
+import { updateLink, deleteLink } from "../firebase";
 
 export default {
   data: function() {
     return {
       alias: "",
       link: "",
-      error: null
+      error: null,
+      edittingLink: false
     };
   },
-  props: ["originalAlias", "originalData"],
+  components: { Loader },
+  props: ["originalAlias", "originalData", "uid"],
   mounted: function() {
     this.alias = this.originalAlias;
     this.link = this.originalData;
   },
   methods: {
-    editLink: function() {
+    submit() {
       this.error = null;
 
       validate(this.alias, this.link)
         .then(results => {
-          this.$emit("edit-link", {
+          this.edittingLink = true;
+          var updatedLink = {
             alias: this.alias,
             password: results.password,
             id: results.id,
-            initialData: this.link
+            initialData: this.link,
+            uid: this.uid
+          };
+          updateLink(updatedLink, () => {
+            this.edittingLink = false;
+            this.$emit("edit-success", updatedLink);
           });
         })
         .catch(error => (this.error = error));
+    },
+    removeLink() {
+      this.edittingLink = true;
+      deleteLink(this.uid, () => {
+        this.edittingLink = false;
+        this.$emit("delete-success", this.uid);
+      });
     }
   }
 };
 </script>
 
 <style scoped>
-input[type="text"] {
-  display: block;
-  margin-bottom: 20px;
-  width: 100%;
-  height: 40px;
-  font-size: 18px;
-  font-family: "Roboto Slab", serif;
-  padding-left: 15px;
-  padding-right: 15px;
-
-  border: none;
-  border-bottom: #418bf9 4px solid;
-  border-radius: 8px 8px 0 0;
-  box-sizing: border-box;
-
-  background-color: #ececec;
-
-  color: #418bf9;
-}
-
-input:focus {
-  outline: 0;
-  border-style: solid;
-  border-color: #839ec7;
-  border-width: 2px;
-  border-bottom: #418bf9 4px solid;
+form {
+  margin: 50px auto;
 }
 
 label {
+  margin-bottom: 10px;
   display: block;
-  margin-bottom: 4px;
-  color: #9093f3;
-}
-form {
-  padding: 0px 60px 0px 60px;
+  color: #6d72f2;
 }
 
-@media only screen and (max-width: 500px) {
-  form {
-    padding: 0px 5px 0px 5px;
-  }
-}
-
-button,
-.add {
-  height: 40px;
-  width: 80px;
-  border-radius: 20px;
-  font-family: "Roboto Slab", serif;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.add {
+.edit {
   float: right;
-  border: none;
-  background-color: #418bf9;
-  color: white;
 }
 
+.edit,
 .cancel {
-  border: #418bf9 3px solid;
-  background-color: white;
-  color: #418bf9;
+  width: 100px;
 }
 
-.error {
-  width: 100%;
-  background-color: #ececec;
-  color: #418bf9;
-  height: 40px;
-  border-radius: 20px;
-  line-height: 40px;
-  padding-left: 15px;
-  padding-right: 15px;
-  box-sizing: border-box;
-  margin-bottom: 15px;
+.edit-text {
+  color: #a82981;
+  text-align: center;
+}
+
+.delete {
+  margin-left: 10px;
+  color: red;
+  border-color: red;
 }
 </style>
