@@ -13,7 +13,7 @@
       </div>
       <a href="#features" class="explore">
         <h3 class="explore-text">Explore Features</h3>
-        <i class="fas fa-chevron-down primary-text"></i>
+        <i class="fas fa-chevron-down primary-text bounce"></i>
       </a>
     </section>
     <section id="features">
@@ -124,6 +124,26 @@ export default {
 
 .explore-text {
   margin: 3px 0 3px 0;
+}
+
+.bounce {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+  60% {
+    transform: translateY(-4px);
+  }
 }
 
 #features {
