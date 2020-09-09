@@ -2,12 +2,12 @@
   <div class="link-container drop-shadow">
     <a v-bind:href="link">
       <span class="link-name">
-        <i class="fas fa-video"></i>
+        <i class="fas fa-video link-icon"></i>
         {{ linkData.alias }}
       </span>
 
       <span class="link-text">
-        <i class="fas fa-link"></i>
+        <i class="fas fa-link link-icon"></i>
         {{ linkData.id }}
       </span>
     </a>
@@ -70,7 +70,7 @@ export default {
   background-color: #296aca;
 }
 
-a {
+.link-container > a {
   color: white;
   text-decoration: none;
   line-height: 40px;
@@ -79,7 +79,7 @@ a {
   text-overflow: ellipsis;
 }
 
-.fas {
+.link-icon {
   margin: 0px 5px 0px 5px;
 }
 
@@ -111,7 +111,8 @@ a {
   float: right;
 }
 
-span {
+.link-name,
+.link-text {
   text-overflow: ellipsis;
   white-space: nowrap;
 }

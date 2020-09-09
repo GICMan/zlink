@@ -13,7 +13,7 @@
       </div>
       <a href="#features" class="explore">
         <h3 class="explore-text">Explore Features</h3>
-        <i class="fas fa-chevron-down primary-text"></i>
+        <i class="fas fa-chevron-down primary-text bounce"></i>
       </a>
     </section>
     <section id="features">
@@ -43,7 +43,8 @@
       </router-link>
     </section>
     <footer class="footer">
-      Created By Gabriel Casselman <a href="/contact">Contact Me</a>
+      Created By Gabriel Casselman
+      <a href="/contact" class="contact">Contact Me</a>
     </footer>
   </div>
 </template>
@@ -84,6 +85,7 @@ export default {
   padding: 70px;
   padding-right: 10%;
   color: #a82981;
+  z-index: 10;
 }
 
 .hero-image {
@@ -122,6 +124,26 @@ export default {
 
 .explore-text {
   margin: 3px 0 3px 0;
+}
+
+.bounce {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+  60% {
+    transform: translateY(-4px);
+  }
 }
 
 #features {
@@ -164,5 +186,9 @@ export default {
   height: 40px;
   margin-top: -40px;
   line-height: 40px;
+}
+
+.contact {
+  margin-left: 30px;
 }
 </style>
