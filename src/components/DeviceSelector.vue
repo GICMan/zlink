@@ -34,7 +34,8 @@ export default {
   mounted() {
     if (
       navigator.userAgent.indexOf("iPhone") != -1 ||
-      navigator.userAgent.indexOf("Android") != -1
+      navigator.userAgent.indexOf("Android") != -1 ||
+      navigator.userAgent.indexOf("iPad") != -1
     ) {
       this.selectDevice(1);
     } else if (
