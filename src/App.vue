@@ -11,6 +11,11 @@
       >
         Go To Zlink <i class="fa fa-arrow-circle-right"></i>
       </router-link>
+      <img
+        v-if="this.$route.name == 'Dashboard'"
+        class="profile"
+        :src="this.userData.photoURL"
+      />
       <button
         v-if="this.$route.name == 'Dashboard'"
         @click="logout"
@@ -66,11 +71,12 @@ export default {
   height: 45px;
   background-color: #b5b8ff;
   box-sizing: border-box;
-  padding: 10px 50px 10px 50px;
+  padding: 5px 50px 5px 50px;
 }
 
 .nav-logo {
   height: 25px;
+  padding: 5px 0;
   display: block;
 }
 
@@ -82,6 +88,7 @@ export default {
   display: inline-block;
   text-decoration: none;
   color: white;
+  line-height: 35px;
 }
 
 .logout {
@@ -92,6 +99,7 @@ export default {
   cursor: pointer;
   font-weight: 800;
   font-size: 1em;
+  line-height: 35px;
 }
 
 .logout:hover {
@@ -100,5 +108,13 @@ export default {
 
 .logout:focus {
   outline: 0;
+}
+
+.profile {
+  border-radius: 50%;
+  height: 31px;
+  margin: 0px 5px;
+  border: solid #f2f2f2 2px;
+  float: right;
 }
 </style>
