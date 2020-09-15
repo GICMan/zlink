@@ -144,7 +144,7 @@ export default {
   background: #418bf9;
 }
 
-.cancel {
+.image-wrapper > .cancel {
   background: none;
   border: none;
   font-size: 1.7em;
@@ -155,7 +155,7 @@ export default {
   position: absolute;
 }
 
-.cancel:hover {
+.image-wrapper > .cancel:hover {
   color: #b5b8ff;
 }
 
