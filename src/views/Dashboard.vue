@@ -30,6 +30,7 @@
       @edit-success="editSuccess"
       @delete-success="deleteSuccess"
     />
+    <Tutorial v-else-if="view == 'TUTORIAL'" @done="closeTutorial" />
   </div>
 </template>
 
@@ -37,21 +38,32 @@
 import LinkList from "../components/LinkList.vue";
 import AddLink from "../components/AddLink.vue";
 import EditLink from "../components/EditLink.vue";
+import Tutorial from "../components/Tutorial.vue";
 import Loader from "../components/Loader.vue";
 import DeviceSelector from "../components/DeviceSelector.vue";
 
 import { loadLinks } from "../firebase.js";
 
 export default {
-  props: ["loggedIn", "userData"],
-  components: { LinkList, DeviceSelector, AddLink, EditLink, Loader },
+  props: ["loggedIn", "userData", "help"],
+  components: {
+    LinkList,
+    DeviceSelector,
+    AddLink,
+    EditLink,
+    Loader,
+    Tutorial
+  },
   mounted: function() {
     if (!this.loggedIn) {
       this.$router.push("/Login");
     } else {
-      loadLinks(this.userData, links => {
+      loadLinks(this.userData, (links, newUser) => {
         this.links = links;
         this.loadingLinks = false;
+        if (newUser) {
+          this.view = "TUTORIAL";
+        }
       });
     }
   },
@@ -87,6 +99,15 @@ export default {
     addSuccess(link) {
       this.links.push({ ...link.data(), uid: link.id });
       this.view = "LIST";
+    },
+    closeTutorial() {
+      this.view = "LIST";
+      this.$emit("closeTutorial");
+    }
+  },
+  watch: {
+    help(val) {
+      if (val) this.view = "TUTORIAL";
     }
   }
 };

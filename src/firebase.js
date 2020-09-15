@@ -24,10 +24,12 @@ const provider = new firebase.auth.GoogleAuthProvider();
 // Create a reference to the signed in user
 // and sets up a live connection to the users links
 const loadLinks = (userData, updateLinks) => {
+  var newUser = false;
   userRef = db.collection("users").doc(userData.uid);
   userRef.get().then(userDoc => {
     if (!userDoc.exists) {
-      userRef.set({ name: userData.displayName, linkOrder: [] });
+      userRef.set({ name: userData.displayName, linkOrder: [], tips: 0 });
+      newUser = true;
     }
 
     userRef
@@ -47,7 +49,7 @@ const loadLinks = (userData, updateLinks) => {
           };
         });
 
-        updateLinks(orderedLinks);
+        updateLinks(orderedLinks, newUser);
       })
       .catch(error => console.error("Could not get document: " + error));
   });

@@ -12,10 +12,11 @@
         Go To Zlink <i class="fa fa-arrow-circle-right"></i>
       </router-link>
       <img
-        v-if="this.$route.name == 'Dashboard'"
-        class="profile"
+        v-if="this.$route.name == 'Dashboard' && this.loggedIn"
+        class="profile drop-shadow"
         :src="this.userData.photoURL"
       />
+
       <button
         v-if="this.$route.name == 'Dashboard'"
         @click="logout"
@@ -23,8 +24,20 @@
       >
         <i class="fas fa-sign-out-alt"></i> Logout
       </button>
+      <button
+        v-if="this.$route.name == 'Dashboard'"
+        @click="help = true"
+        class="help"
+      >
+        Help
+      </button>
     </div>
-    <router-view :loggedIn="loggedIn" :userData="userData" />
+    <router-view
+      :loggedIn="loggedIn"
+      :userData="userData"
+      :help="help"
+      @closeTutorial="help = false"
+    />
   </div>
 </template>
 
@@ -38,7 +51,8 @@ export default {
   data() {
     return {
       userData: {},
-      loggedIn: false
+      loggedIn: false,
+      help: false
     };
   },
   mounted: function() {
@@ -107,6 +121,25 @@ export default {
 }
 
 .logout:focus {
+  outline: 0;
+}
+
+.help {
+  color: white;
+  border: none;
+  background-color: transparent;
+  float: right;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 1em;
+  line-height: 35px;
+}
+
+.help:hover {
+  color: #f2f2f2;
+}
+
+.help:focus {
   outline: 0;
 }
 
