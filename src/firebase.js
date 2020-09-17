@@ -28,7 +28,7 @@ const loadLinks = (userData, updateLinks) => {
   userRef = db.collection("users").doc(userData.uid);
   userRef.get().then(userDoc => {
     if (!userDoc.exists) {
-      userRef.set({ name: userData.displayName, linkOrder: [], tips: 0 });
+      userRef.set({ name: userData.displayName, linkOrder: [] });
       newUser = true;
     }
 
